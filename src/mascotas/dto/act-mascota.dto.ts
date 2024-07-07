@@ -17,4 +17,3 @@ export class ActMascotaDto {
   @IsOptional()
   dueño?: string;
 }
-

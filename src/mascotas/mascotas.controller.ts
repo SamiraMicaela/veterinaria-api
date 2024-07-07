@@ -1,71 +1,37 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Mascota } from './mascota.entity';
+import { Controller, Get, Post, Body, Param, Put, Delete,UsePipes, ValidationPipe } from '@nestjs/common';
+import { MascotasService } from './mascotas.service';
 import { CrearMascotaDto } from './dto/crear-mascota.dto';
 import { ActMascotaDto } from './dto/act-mascota.dto';
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Mascota } from './mascota.entity';
 
-@Injectable()
-export class MascotasService {
-  private readonly rutaArchivo = path.resolve(__dirname, 'data.json');
+@Controller('mascotas')
+export class MascotasController {
+  constructor(private readonly mascotasService: MascotasService) {}
 
-  private mascotas: Mascota[] = [];
-
-  constructor() {
-    this.cargarDesdeArchivo();
+  @Post()
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  crear(@Body() crearMascotaDto: CrearMascotaDto): Mascota {
+    return this.mascotasService.crear(crearMascotaDto);
   }
 
-  private cargarDesdeArchivo(): void {
-    if (fs.existsSync(this.rutaArchivo)) {
-      const contenidoArchivo = fs.readFileSync(this.rutaArchivo, 'utf-8');
-      this.mascotas = JSON.parse(contenidoArchivo);
-    }
-  }
-
-  private guardarEnArchivo(): void {
-    fs.writeFileSync(this.rutaArchivo, JSON.stringify(this.mascotas, null, 2));
-  }
-
-  crear(crearMascotaDto: CrearMascotaDto): Mascota {
-    const nuevaMascota: Mascota = {
-      id: uuidv4(),
-      ...crearMascotaDto,
-    };
-    this.mascotas.push(nuevaMascota);
-    this.guardarEnArchivo();
-    return nuevaMascota;
-  }
-
+  @Get()
   buscar(): Mascota[] {
-    return this.mascotas;
+    return this.mascotasService.buscar();
   }
 
-  buscarId(id: string): Mascota {
-    const mascota = this.mascotas.find(m => m.id === id);
-    if (!mascota) {
-      throw new NotFoundException(`Mascota con ID ${id} no encontrada`);
-    }
-    return mascota;
+  @Get(':id')
+  buscarId(@Param('id') id: string): Mascota {
+    return this.mascotasService.buscarId(id);
   }
 
-  act(id: string, actMascotaDto: ActMascotaDto): Mascota {
-    const mascotaIndex = this.mascotas.findIndex(m => m.id === id);
-    if (mascotaIndex === -1) {
-      throw new NotFoundException(`Mascota con ID ${id} no encontrada`);
-    }
-    const mascotaActualizada = { ...this.mascotas[mascotaIndex], ...actMascotaDto };
-    this.mascotas[mascotaIndex] = mascotaActualizada;
-    this.guardarEnArchivo();
-    return mascotaActualizada;
+  @Put(':id')
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  act(@Param('id') id: string, @Body() actMascotaDto: ActMascotaDto): Mascota {
+    return this.mascotasService.act(id, actMascotaDto);
   }
 
-  eliminar(id: string): void {
-    const mascotaIndex = this.mascotas.findIndex(m => m.id === id);
-    if (mascotaIndex === -1) {
-      throw new NotFoundException(`Mascota con ID ${id} no encontrada`);
-    }
-    this.mascotas.splice(mascotaIndex, 1);
-    this.guardarEnArchivo();
+  @Delete(':id')
+  eliminar(@Param('id') id: string): void {
+    return this.mascotasService.eliminar(id);
   }
 }
