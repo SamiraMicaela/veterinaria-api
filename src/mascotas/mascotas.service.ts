@@ -16,7 +16,7 @@ export class MascotasService {
 
   private cargarDesdeArchivo(): Mascota[]{
     if (fs.existsSync(this.rutaArchivo)) {
-      fs.mkdirSync(join(__dirname, 'mascotas.json'), { recursive: true });
+      fs.mkdirSync(join(__dirname,'data', 'mascotas.json'), { recursive: true });
       fs.writeFileSync(this.rutaArchivo, '[]', 'utf8');
     }
     const data = fs.readFileSync(this.rutaArchivo, 'utf8');
