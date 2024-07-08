@@ -1,10 +1,26 @@
-[
+{
+  "mascotas": [
     {
-        "id": "d07d2b23-e1df-45bd-a9fd-98c9be03c6e9",
-        "nombre": "mariposa",
-        "tipo": "cabra",
-        "edad": 3,
-        "dueño": "yam"
+      "id": "d07d2b23-e1df-45bd-a9fd-98c9be03c6e9",
+      "nombre": "mariposa",
+      "tipo": "cabra",
+      "edad": 3,
+      "dueño": "yam"
     },
-    {}
-]
+    {},
+    {
+      "id": "7d7cdf6f-08bf-40d5-88d2-56c948215bc8",
+      "nombre": "Babitas",
+      "tipo": "gato",
+      "edad": 9,
+      "dueño": "Samira "
+    },
+    {
+      "id": "55270c1f-508b-440f-912a-57b4466c0a04",
+      "nombre": "fugaz",
+      "tipo": "gato",
+      "edad": 9,
+      "dueño": "Micaela "
+    }
+  ]
+}

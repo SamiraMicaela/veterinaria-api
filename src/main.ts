@@ -8,6 +8,7 @@ async function bootstrap() {
     whitelist:true,
     forbidNonWhitelisted: true,
   }));
+  app.enableCors({ origin: 'http://localhost:3001' })//supuestamente, estoy habilitando cors a react que se encuentra en 3001.
   await app.listen(3000);
 }
 bootstrap();

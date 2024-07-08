@@ -3,24 +3,18 @@ import { Mascota } from './mascota.entity';
 import { CrearMascotaDto } from './dto/crear-mascota.dto';
 import { ActMascotaDto } from './dto/act-mascota.dto';
 import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-
+//import { existsSync, promises as fsPromises } from 'fs';
+import * as fs from 'node:fs'
 import {join} from 'path';
 
 @Injectable()
 export class MascotasService {
-  private readonly rutaArchivo = join(__dirname, 'data','mascotas.json');
+  private readonly rutaArchivo = join(process.cwd(), 'src', 'mascotas', 'data', 'mascotas.json');
   private mascotas: Mascota[] = this.cargarDesdeArchivo();
-
-  
-
-  private cargarDesdeArchivo(): Mascota[]{
-    if (fs.existsSync(this.rutaArchivo)) {
-      fs.mkdirSync(join(__dirname,'data', 'mascotas.json'), { recursive: true });
-      fs.writeFileSync(this.rutaArchivo, '[]', 'utf8');
-    }
+  private cargarDesdeArchivo(): Mascota[] {
     const data = fs.readFileSync(this.rutaArchivo, 'utf8');
-    return JSON.parse(data) as Mascota[];
+    const jsonData = JSON.parse(data);
+    return jsonData as Mascota[];
   }
 
   private guardarEnArchivo(): void {
